@@ -8,6 +8,7 @@ public class Script : MonoBehaviour
     private bool isOnGround;
     private bool isRight = true;
 
+    [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private float jumpForce;
     [SerializeField] private KeyCode jumpKey;
     [SerializeField] private float movementSpeed;
@@ -16,6 +17,7 @@ public class Script : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private GameObject shape;
     [SerializeField] private float deathHeight;
+    [SerializeField] private int damage;
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
@@ -32,6 +34,17 @@ public class Script : MonoBehaviour
         {
             Jump();
         }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Shoot(damage);
+        }
+    }
+
+    private void Shoot(int damage)
+    {
+        var projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+        projectile.Shoot(isRight ? 1 : -1, damage);
     }
 
     private void CheckHeightDeath()
