@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private int Health;
     [SerializeField] private bool canPatrol;
-    [SerializeField] private List<Transform> patrolPositions;
+    [SerializeField] private List<PatrolMovement> patrolPositions;
 
     private List<Vector3> patrolPositionCopy;
     private int patrolPosIndex;
@@ -21,7 +21,8 @@ public class Enemy : MonoBehaviour
         patrolPositionCopy = new List<Vector3>();
         foreach (var t in patrolPositions)   
         {
-            patrolPositionCopy.Add(new Vector3(t.position.x,t.position.y,t.position.z));
+            patrolPositionCopy.Add(new Vector3(t.patrolPosition.position.x,t.patrolPosition.position.y,
+                t.patrolPosition.position.z));
         }
     }
 
@@ -46,13 +47,13 @@ public class Enemy : MonoBehaviour
         time += Time.deltaTime;
         if (canPatrol)
         {
-            MoveToPosition(patrolPositionCopy[patrolPosIndex]);
+            MoveToPosition(patrolPositionCopy[patrolPosIndex],patrolPositions[patrolPosIndex].duration);
         }
     }
 
-    private void MoveToPosition(Vector3 pos)
+    private void MoveToPosition(Vector3 pos, float duration)
     {
-        var t = 2;
+        var t = duration;
         var prevIndex = patrolPosIndex - 1;
         if (patrolPosIndex < 1)
         {
@@ -77,6 +78,12 @@ public class Enemy : MonoBehaviour
             time = 0;
         }
     }
+}
+[System.Serializable]
+class PatrolMovement
+{
+    public Transform patrolPosition;
+    public float duration;
 }
 
 

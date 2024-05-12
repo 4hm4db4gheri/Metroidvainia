@@ -8,6 +8,7 @@ public class Script : MonoBehaviour
     private bool isOnGround;
     private bool isRight = true;
 
+    [SerializeField] private Animator animator;
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private float jumpForce;
     [SerializeField] private KeyCode jumpKey;
@@ -76,6 +77,7 @@ public class Script : MonoBehaviour
 
     private void MoveLogic(float horizontalInput)
     {
+        animator.SetBool("isMoving",horizontalInput!=0);
         var velocity = _rigidbody2D.velocity;
         velocity.x = horizontalInput * movementSpeed;
         _rigidbody2D.velocity = velocity;
