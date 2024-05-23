@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private int Health;
     [SerializeField] private bool canPatrol;
     [SerializeField] private List<PatrolMovement> patrolPositions;
+    [SerializeField] private LayerMask characterLayer;
+    [SerializeField] private float characterDetectionRange;
+    [SerializeField] private int damage;
 
     private List<Vector3> patrolPositionCopy;
     private int patrolPosIndex;
@@ -19,16 +23,16 @@ public class Enemy : MonoBehaviour
         _maxHealth = Health;
 
         patrolPositionCopy = new List<Vector3>();
-        foreach (var t in patrolPositions)   
+        foreach (var t in patrolPositions)
         {
-            patrolPositionCopy.Add(new Vector3(t.patrolPosition.position.x,t.patrolPosition.position.y,
+            patrolPositionCopy.Add(new Vector3(t.patrolPosition.position.x, t.patrolPosition.position.y,
                 t.patrolPosition.position.z));
         }
     }
 
     public void GetHit(int damage)
     {
-        if(Health<=0)
+        if (Health <= 0)
             return;
 
         Health -= damage;
@@ -47,8 +51,19 @@ public class Enemy : MonoBehaviour
         time += Time.deltaTime;
         if (canPatrol)
         {
-            MoveToPosition(patrolPositionCopy[patrolPosIndex],patrolPositions[patrolPosIndex].duration);
+            MoveToPosition(patrolPositionCopy[patrolPosIndex], patrolPositions[patrolPosIndex].duration);
         }
+        var hit = Physics2D.OverlapCircle(transform.position, characterDetectionRange, characterLayer);
+        if (hit)
+        {
+            hit.gameObject.GetComponent<Character>().GetHit(damage);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(transform.position, characterDetectionRange);
     }
 
     private void MoveToPosition(Vector3 pos, float duration)

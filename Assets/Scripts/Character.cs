@@ -1,12 +1,15 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Script : MonoBehaviour
+public class Character : MonoBehaviour
 {
     private Rigidbody2D _rigidbody2D;
     private int jumpCount;
     private bool isOnGround;
     private bool isRight = true;
+    private bool isHittable = true;
 
     [SerializeField] private Animator animator;
     [SerializeField] private Projectile projectilePrefab;
@@ -19,6 +22,8 @@ public class Script : MonoBehaviour
     [SerializeField] private GameObject shape;
     [SerializeField] private float deathHeight;
     [SerializeField] private int damage;
+    [SerializeField] private int health;
+
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
@@ -53,6 +58,36 @@ public class Script : MonoBehaviour
     {
         if (transform.position.y < deathHeight)
             Die();
+    }
+
+    public void GetHit(int Damage)
+    {
+        if (!isHittable)
+            return;
+
+        if (health <= 0)
+            return;
+
+        health -= Damage;
+
+        if (health <= 0)
+            Die();
+        else
+            StartCoroutine(StartInvulnerability());
+        HUDController.instance.Repaint(health);
+    }
+
+    private IEnumerator StartInvulnerability()
+    {
+        isHittable = false;
+        for (int i = 0; i < 3; i++)
+        {
+            shape.gameObject.SetActive(false);
+            yield return new WaitForSeconds(0.2f);
+            shape.gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.2f);
+        }
+        isHittable = true;
     }
 
     private void Die()
