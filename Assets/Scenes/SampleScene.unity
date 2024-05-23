@@ -6202,7 +6202,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1014310935005529632, guid: 42632d5f4e9cb4fad9b5ef7b7ffcb1d5, type: 3}
   jumpForce: 45
   jumpKey: 32
-  movementSpeed: 10
+  movementSpeed: 15
   maxJumpCount: 1
   groundDetectionRange: 1.2
   groundMask:
@@ -10424,7 +10424,7 @@ Animator:
   m_GameObject: {fileID: 2018345085}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: aa3d2e28f500b44fda43b58f4f0ae1e0, type: 2}
+  m_Controller: {fileID: 9100000, guid: 51124da10361e884290a502288a6e142, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -40,6 +40,7 @@ public class Script : MonoBehaviour
         {
             Shoot(damage);
         }
+
     }
 
     private void Shoot(int damage)
@@ -77,7 +78,7 @@ public class Script : MonoBehaviour
 
     private void MoveLogic(float horizontalInput)
     {
-        animator.SetBool("isMoving",horizontalInput!=0);
+        animator.SetBool("IsMoving", horizontalInput != 0);
         var velocity = _rigidbody2D.velocity;
         velocity.x = horizontalInput * movementSpeed;
         _rigidbody2D.velocity = velocity;
@@ -96,12 +97,12 @@ public class Script : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.black;
-        Gizmos.DrawLine(transform.position,transform.position + Vector3.down * groundDetectionRange);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundDetectionRange);
     }
 
     private void GroundDetection()
     {
-        var hit = Physics2D.Raycast(transform.position, Vector2.down, groundDetectionRange,groundMask);
+        var hit = Physics2D.Raycast(transform.position, Vector2.down, groundDetectionRange, groundMask);
         if (!isOnGround && hit)
         {
             jumpCount = 0;
