@@ -8,7 +8,8 @@ public class HUDController : MonoBehaviour
     public static HUDController instance;
     [SerializeField] Image[] images;
     [SerializeField] Sprite fullHeart, brokenHeart;
-
+    [SerializeField] Transform HealthParent;
+    
     private void Awake()
     {
         instance = this;
@@ -16,6 +17,7 @@ public class HUDController : MonoBehaviour
 
     public void Repaint(int health)
     {
+        
         for (int i = 0; i < images.Length; i++)
             images[i].sprite = brokenHeart;
 
@@ -23,4 +25,5 @@ public class HUDController : MonoBehaviour
             images[i].sprite = fullHeart;
 
     }
+    
 }
