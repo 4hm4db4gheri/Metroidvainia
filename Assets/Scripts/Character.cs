@@ -51,8 +51,8 @@ public class Character : MonoBehaviour
     private void Shoot(int damage)
     {
         var projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-        projectile.Shoot(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position, damage);
-        Debug.Log(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        Vector2 projectileAngle = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        projectile.Shoot(projectileAngle.normalized, damage);
         
     }
 
