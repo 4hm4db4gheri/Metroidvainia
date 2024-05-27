@@ -9,10 +9,10 @@ public class Projectile : MonoBehaviour
 
     private float _duration;
     private bool hasShot;
-    private int direction;
+    private Vector2 direction;
     private int damage;
 
-    public void Shoot(int direction , int damage)
+    public void Shoot(Vector2 direction , int damage)
     {
         _duration = lifeDuration;
         hasShot = true;
@@ -50,10 +50,12 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    private void Move(int direction)
+    private void Move(Vector2 direction)
     {
         var pos = transform.position;
-        pos.x += speed * direction * Time.deltaTime;
+        pos.x += speed * direction.x * Time.deltaTime;
+        pos.y += speed * direction.y * Time.deltaTime;
+        pos.z = 0;
         transform.position = pos;
     }
 

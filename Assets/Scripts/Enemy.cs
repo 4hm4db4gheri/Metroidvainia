@@ -5,7 +5,10 @@ using UnityEngine.TextCore.Text;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private int Health;
+    public int MaxHeath;
+    public int Health;
+
+    [SerializeField] private EnemyHUDController _enemyHUDController;
     [SerializeField] private bool canPatrol;
     [SerializeField] private List<PatrolMovement> patrolPositions;
     [SerializeField] private LayerMask characterLayer;
@@ -14,14 +17,13 @@ public class Enemy : MonoBehaviour
 
     private List<Vector3> patrolPositionCopy;
     private int patrolPosIndex;
-    private int _maxHealth;
 
     private float time;
 
     private void Start()
     {
-        _maxHealth = Health;
-
+        MaxHeath = Health;
+        _enemyHUDController.Setup(this);
         patrolPositionCopy = new List<Vector3>();
         foreach (var t in patrolPositions)
         {
@@ -36,6 +38,7 @@ public class Enemy : MonoBehaviour
             return;
 
         Health -= damage;
+        _enemyHUDController.Repaint(this);
 
         if (Health <= 0)
             Die();

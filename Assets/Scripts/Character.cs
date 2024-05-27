@@ -51,7 +51,9 @@ public class Character : MonoBehaviour
     private void Shoot(int damage)
     {
         var projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-        projectile.Shoot(isRight ? 1 : -1, damage);
+        projectile.Shoot(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position, damage);
+        Debug.Log(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        
     }
 
     private void CheckHeightDeath()
