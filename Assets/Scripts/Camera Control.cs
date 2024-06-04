@@ -24,33 +24,16 @@ public class CameraControl : MonoBehaviour
       if ((target.position.x - transform.position.x) > cameraXFrontGrid)
       {
          pos.x += target.position.x - transform.position.x - cameraXFrontGrid;
-         // transform.position = pos;
       }
       else if ((target.position.x - transform.position.x) < -cameraXBehindGrid)
       {
          pos.x += target.position.x - transform.position.x + cameraXBehindGrid;
-         // transform.position = pos;
       }
       pos.y = target.position.y + offset.y;
       transform.position = pos;
-      //  else if ((target.position.y - transform.position.y) > cameraYGrid / 2)
-      // {
-      //    pos.y += target.position.y - transform.position.y - cameraYGrid / 2;
-      //    transform.position = pos;
-      // }
-      // else if ((target.position.y - transform.position.y) < -cameraYGrid / 2)
-      // {
-      //    pos.y += target.position.y - transform.position.y + cameraYGrid / 2;
-      //    transform.position = pos;
-      // }
       
 
    }
-   // private void OnDrawGizmos()
-   // {
-   //    Gizmos.color = Color.red;
-   //    Gizmos.DrawWireCube(transform.position, new Vector2(cameraXFrontGrid, cameraYGrid));
-   // }
    private void OnDrawGizmos() {
 
       Gizmos.color = Color.red;
