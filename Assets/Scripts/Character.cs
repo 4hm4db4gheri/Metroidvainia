@@ -12,6 +12,7 @@ public class Character : MonoBehaviour
     private bool isHittable = true;
 
     [SerializeField] private Animator animator;
+    [SerializeField] private Animator swordAnimator;
     [SerializeField] private Projectile projectilePrefab;
     [SerializeField] private float jumpForce;
     [SerializeField] private KeyCode jumpKey;
@@ -43,9 +44,15 @@ public class Character : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            Shoot(damage);
+            // Shoot(damage);
+            Attack(damage);
         }
 
+    }
+
+    private void Attack(int damage)
+    {
+        swordAnimator.SetTrigger("Attack");
     }
 
     private void Shoot(int damage)
