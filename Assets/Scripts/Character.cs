@@ -13,15 +13,20 @@ public class Character : MonoBehaviour
 
     [SerializeField] private Animator animator;
     [SerializeField] private Animator swordAnimator;
+
     [SerializeField] private Projectile projectilePrefab;
-    [SerializeField] private float jumpForce;
     [SerializeField] private KeyCode jumpKey;
-    [SerializeField] private float movementSpeed;
-    [SerializeField] private int maxJumpCount;
-    [SerializeField] private float groundDetectionRange;
     [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask enemyMask;
     [SerializeField] private GameObject shape;
+
+    [SerializeField] private float attackDetectionRange;
+    [SerializeField] private float jumpForce;
+    [SerializeField] private float movementSpeed;
+    [SerializeField] private float groundDetectionRange;
     [SerializeField] private float deathHeight;
+
+    [SerializeField] private int maxJumpCount;
     [SerializeField] private int damage;
     [SerializeField] private int health;
 
@@ -53,6 +58,7 @@ public class Character : MonoBehaviour
     private void Attack(int damage)
     {
         swordAnimator.SetTrigger("Attack");
+        var hit = Physics2D.OverlapCircle(swordAnimator.transform.position, attackDetectionRange, enemyMask);
     }
 
     private void Shoot(int damage)
@@ -142,6 +148,8 @@ public class Character : MonoBehaviour
     {
         Gizmos.color = Color.black;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundDetectionRange);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(swordAnimator.transform.position, attackDetectionRange);
     }
 
     private void GroundDetection()
