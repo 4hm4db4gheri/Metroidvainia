@@ -13,7 +13,6 @@ public class Character : MonoBehaviour
 
     [Header("Sword")]
     [SerializeField] private Animator swordAnimator;
-    [SerializeField] private GameObject swordShape;
     [SerializeField] private float attackDetectionRange;
     [SerializeField] private int damage;
     [SerializeField] private LayerMask enemyMask;
@@ -125,18 +124,9 @@ public class Character : MonoBehaviour
 
     private void Flip()
     {
-        var scale = shape.transform.localScale;
-        var swordScale = swordShape.transform.localScale;
-        var swordPosition = swordShape.transform.localPosition;
-
+        var scale = transform.localScale;
         scale.x *= -1;
-        swordScale.x *= -1;
-        swordPosition.x *= -1;
-
-        swordShape.transform.localPosition = swordPosition;
-        shape.transform.localScale = scale;
-        swordShape.transform.localScale = swordScale;
-
+        transform.localScale = scale;
         isRight = !isRight;
     }
 
