@@ -11,24 +11,29 @@ public class Character : MonoBehaviour
     private bool isRight = true;
     private bool isHittable = true;
 
-    [SerializeField] private Animator animator;
+    [Header("Sword")]
     [SerializeField] private Animator swordAnimator;
-
-    [SerializeField] private Projectile projectilePrefab;
-    [SerializeField] private KeyCode jumpKey;
-    [SerializeField] private LayerMask groundMask;
-    [SerializeField] private LayerMask enemyMask;
-    [SerializeField] private GameObject shape;
-
+    [SerializeField] private GameObject swordShape;
     [SerializeField] private float attackDetectionRange;
+    [SerializeField] private int damage;
+    [SerializeField] private LayerMask enemyMask;
+
+
+    [Header("Movement")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private KeyCode jumpKey;
     [SerializeField] private float jumpForce;
     [SerializeField] private float movementSpeed;
     [SerializeField] private float groundDetectionRange;
-    [SerializeField] private float deathHeight;
-
     [SerializeField] private int maxJumpCount;
-    [SerializeField] private int damage;
+    [SerializeField] private LayerMask groundMask;
+
+    [Header("Player")]
+    [SerializeField] private float deathHeight;
+    [SerializeField] private GameObject shape;
     [SerializeField] private int health;
+    [SerializeField] private Projectile projectilePrefab;
+
 
     void Start()
     {
@@ -66,7 +71,7 @@ public class Character : MonoBehaviour
         var projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         Vector2 projectileAngle = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         projectile.Shoot(projectileAngle.normalized, damage);
-        
+
     }
 
     private void CheckHeightDeath()
@@ -121,8 +126,17 @@ public class Character : MonoBehaviour
     private void Flip()
     {
         var scale = shape.transform.localScale;
+        var swordScale = swordShape.transform.localScale;
+        var swordPosition = swordShape.transform.localPosition;
+
         scale.x *= -1;
+        swordScale.x *= -1;
+        swordPosition.x *= -1;
+
+        swordShape.transform.localPosition = swordPosition;
         shape.transform.localScale = scale;
+        swordShape.transform.localScale = swordScale;
+
         isRight = !isRight;
     }
 
