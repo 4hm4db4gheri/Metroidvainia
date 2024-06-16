@@ -10,6 +10,8 @@ public class Character : MonoBehaviour
     private bool isOnGround;
     private bool isRight = true;
     private bool isHittable = true;
+    private bool isWallSliding;
+    private float horizontalInput;
 
     [Header("Sword")]
     [SerializeField] private Animator swordAnimator;
@@ -33,6 +35,12 @@ public class Character : MonoBehaviour
     [SerializeField] private int health;
     [SerializeField] private Projectile projectilePrefab;
 
+    [Header("WallSlide")]
+    [SerializeField] private float wallSlideSpeed;
+    [SerializeField] private float wallDetectionRange;
+    [SerializeField] private Transform wallCheck;
+    [SerializeField] private LayerMask wallMask;
+
 
     void Start()
     {
@@ -41,7 +49,7 @@ public class Character : MonoBehaviour
 
     void Update()
     {
-        var horizontalInput = Input.GetAxisRaw("Horizontal");
+        horizontalInput = Input.GetAxisRaw("Horizontal");
         CheckHeightDeath();
         GroundDetection();
         MoveLogic(horizontalInput);
@@ -57,6 +65,28 @@ public class Character : MonoBehaviour
             Attack(damage);
         }
 
+        WallSlide();
+
+    }
+
+
+
+    private bool isWalled()
+    {
+        return Physics2D.OverlapCircle(wallCheck.position, wallDetectionRange, wallMask);
+    }
+
+    private void WallSlide()
+    {
+        if (isWalled() && !isOnGround && horizontalInput != 0)
+        {
+            isWallSliding = true;
+            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, Math.Clamp(_rigidbody2D.velocity.y, -wallSlideSpeed, float.MaxValue));
+        }
+        else
+        {
+            isWallSliding = false;
+        }
     }
 
     private void Attack(int damage)
@@ -154,6 +184,8 @@ public class Character : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundDetectionRange);
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(swordAnimator.transform.position, attackDetectionRange);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(wallCheck.position, wallDetectionRange);
     }
 
     private void GroundDetection()
