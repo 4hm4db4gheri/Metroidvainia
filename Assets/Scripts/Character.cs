@@ -93,15 +93,10 @@ public class Character : MonoBehaviour
     {
         swordAnimator.SetTrigger("Attack");
         var hit = Physics2D.OverlapCircle(swordAnimator.transform.position, attackDetectionRange, enemyMask);
+        hit.gameObject.TryGetComponent<Enemy>(out var enemy);
+        enemy.GetHit(damage);
     }
 
-    private void Shoot(int damage)
-    {
-        var projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-        Vector2 projectileAngle = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        projectile.Shoot(projectileAngle.normalized, damage);
-
-    }
 
     private void CheckHeightDeath()
     {
@@ -172,10 +167,13 @@ public class Character : MonoBehaviour
     {
         if (jumpCount >= maxJumpCount)
             return;
-        var velocity = _rigidbody2D.velocity;
-        velocity.y = jumpForce;
-        _rigidbody2D.velocity = velocity;
-        jumpCount++;
+        if (!isWallSliding)
+        {
+            var velocity = _rigidbody2D.velocity;
+            velocity.y = jumpForce;
+            _rigidbody2D.velocity = velocity;
+            jumpCount++;
+        } 
     }
 
     private void OnDrawGizmos()
@@ -199,3 +197,11 @@ public class Character : MonoBehaviour
         isOnGround = hit;
     }
 }
+
+    // private void Shoot(int damage)
+    // {
+    //     var projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+    //     Vector2 projectileAngle = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+    //     projectile.Shoot(projectileAngle.normalized, damage);
+
+    // }
