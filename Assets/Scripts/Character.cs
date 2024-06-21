@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Character : MonoBehaviour
 {
-    private Rigidbody2D _rigidbody2D;
+    private Rigidbody2D rb;
     private int jumpCount;
     private bool isOnGround;
     private bool isRight = true;
@@ -23,8 +23,8 @@ public class Character : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private Animator animator;
     [SerializeField] private KeyCode jumpKey;
-    [SerializeField] private float jumpForce;
     [SerializeField] private float movementSpeed;
+    [SerializeField] private float jumpForce;
     [SerializeField] private float groundDetectionRange;
     [SerializeField] private int maxJumpCount;
     [SerializeField] private LayerMask groundMask;
@@ -41,10 +41,18 @@ public class Character : MonoBehaviour
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallMask;
 
+    [Header("WallJump")]
+    [SerializeField] float wallJumpDuration;
+    [SerializeField] Vector2 wallJumpForce;
+    private bool isWallJumping;
+    private float wallJumpTime;
+    private float wallJumpDirection;
+
+
 
     void Start()
     {
-        _rigidbody2D = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -66,10 +74,41 @@ public class Character : MonoBehaviour
         }
 
         WallSlide();
+        WallJump();
 
     }
 
+    private void WallJump()
+    {
+        if (isWallSliding)
+        {
+            wallJumpTime = wallJumpDuration;
+            wallJumpDirection = -transform.localScale.x;
+            Debug.Log("WallSliding");
+        }
 
+
+        if (Input.GetKeyDown(jumpKey) && isWallSliding && !isOnGround)
+        {
+            Debug.Log("isWallJumping = true;");
+            isWallJumping = true;
+        }
+
+
+        if (isWallJumping)
+        {
+            Debug.Log("wallJumping");
+            if (wallJumpTime > 0)
+            {
+                wallJumpTime -= Time.deltaTime;
+                rb.velocity = new Vector2(wallJumpDirection * wallJumpForce.x, wallJumpForce.y);
+                if (wallJumpTime <= 0)
+                {
+                    isWallJumping = false;
+                }
+            }
+        }
+    }
 
     private bool isWalled()
     {
@@ -81,7 +120,7 @@ public class Character : MonoBehaviour
         if (isWalled() && !isOnGround && horizontalInput != 0)
         {
             isWallSliding = true;
-            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, Math.Clamp(_rigidbody2D.velocity.y, -wallSlideSpeed, float.MaxValue));
+            rb.velocity = new Vector2(rb.velocity.x, Math.Clamp(rb.velocity.y, -wallSlideSpeed, float.MaxValue));
         }
         else
         {
@@ -158,9 +197,9 @@ public class Character : MonoBehaviour
     private void MoveLogic(float horizontalInput)
     {
         animator.SetBool("IsMoving", horizontalInput != 0);
-        var velocity = _rigidbody2D.velocity;
+        var velocity = rb.velocity;
         velocity.x = horizontalInput * movementSpeed;
-        _rigidbody2D.velocity = velocity;
+        rb.velocity = velocity;
     }
 
     private void Jump()
@@ -169,11 +208,11 @@ public class Character : MonoBehaviour
             return;
         if (!isWallSliding)
         {
-            var velocity = _rigidbody2D.velocity;
+            var velocity = rb.velocity;
             velocity.y = jumpForce;
-            _rigidbody2D.velocity = velocity;
+            rb.velocity = velocity;
             jumpCount++;
-        } 
+        }
     }
 
     private void OnDrawGizmos()
@@ -198,10 +237,10 @@ public class Character : MonoBehaviour
     }
 }
 
-    // private void Shoot(int damage)
-    // {
-    //     var projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-    //     Vector2 projectileAngle = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-    //     projectile.Shoot(projectileAngle.normalized, damage);
+// private void Shoot(int damage)
+// {
+//     var projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+//     Vector2 projectileAngle = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+//     projectile.Shoot(projectileAngle.normalized, damage);
 
-    // }
+// }
