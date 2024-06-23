@@ -60,7 +60,8 @@ public class Character : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         CheckHeightDeath();
         GroundDetection();
-        MoveLogic(horizontalInput);
+        if (!isWallJumping)
+            MoveLogic(horizontalInput);
         FlipCheck(horizontalInput);
         if (Input.GetKeyDown(jumpKey))
         {
@@ -84,24 +85,21 @@ public class Character : MonoBehaviour
         {
             wallJumpTime = wallJumpDuration;
             wallJumpDirection = -transform.localScale.x;
-            Debug.Log("WallSliding");
         }
 
 
         if (Input.GetKeyDown(jumpKey) && isWallSliding && !isOnGround)
         {
-            Debug.Log("isWallJumping = true;");
             isWallJumping = true;
+            rb.velocity = new Vector2(wallJumpDirection * wallJumpForce.x, wallJumpForce.y);
         }
 
 
         if (isWallJumping)
         {
-            Debug.Log("wallJumping");
             if (wallJumpTime > 0)
             {
                 wallJumpTime -= Time.deltaTime;
-                rb.velocity = new Vector2(wallJumpDirection * wallJumpForce.x, wallJumpForce.y);
                 if (wallJumpTime <= 0)
                 {
                     isWallJumping = false;
