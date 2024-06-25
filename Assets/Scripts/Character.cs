@@ -50,6 +50,7 @@ public class Character : MonoBehaviour
 
 
 
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -76,8 +77,9 @@ public class Character : MonoBehaviour
 
         WallSlide();
         WallJump();
-
+       
     }
+
 
     private void WallJump()
     {
@@ -173,7 +175,7 @@ public class Character : MonoBehaviour
 
     private void Die()
     {
-        SceneManager.LoadScene(0);
+        RespawnSystem.instance.Respawn(this);
     }
 
     private void FlipCheck(float input)
