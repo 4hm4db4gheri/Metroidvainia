@@ -137,8 +137,11 @@ public class Character : MonoBehaviour
     {
         swordAnimator.SetTrigger("Attack");
         var hit = Physics2D.OverlapCircle(swordAnimator.transform.position, attackDetectionRange, enemyMask);
-        hit.gameObject.TryGetComponent<Enemy>(out var enemy);
-        enemy.GetHit(damage);
+        if (hit)
+        {
+            hit.gameObject.TryGetComponent<Enemy>(out var enemy);
+            enemy.GetHit(damage);
+        }
     }
 
 
