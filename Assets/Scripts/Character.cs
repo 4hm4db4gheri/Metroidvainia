@@ -12,6 +12,7 @@ public class Character : MonoBehaviour
     private bool isHittable = true;
     private bool isWallSliding;
     private float horizontalInput;
+    private int maxHealth;
 
     [Header("Sword")]
     [SerializeField] private Animator swordAnimator;
@@ -48,12 +49,16 @@ public class Character : MonoBehaviour
     private float wallJumpTime;
     private float wallJumpDirection;
 
+    [Header("Respawn")]
+    [SerializeField] Enemy[] enemies;
+
 
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        maxHealth = health;
     }
 
     void Update()
@@ -77,7 +82,7 @@ public class Character : MonoBehaviour
 
         WallSlide();
         WallJump();
-       
+
     }
 
 
@@ -175,7 +180,24 @@ public class Character : MonoBehaviour
 
     private void Die()
     {
+        RespawnEntities();
+
         RespawnSystem.instance.Respawn(this);
+    }
+
+    private void RespawnEntities()
+    {
+        //Setting player health
+        health = maxHealth;
+
+        //Setting enemies health
+        foreach (var enemy in enemies)
+        {
+            if (!enemy.gameObject.activeInHierarchy)
+                enemy.gameObject.SetActive(true);
+            enemy.Health = enemy.MaxHeath;
+            enemy.Repaint();
+        }
     }
 
     private void FlipCheck(float input)

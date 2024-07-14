@@ -2,34 +2,28 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using DG.Tweening;
+using UnityEditor.ShaderGraph.Internal;
 
 public class Enemy : MonoBehaviour
 {
     public int MaxHeath;
+
     public int Health;
 
     [SerializeField] private EnemyHUDController _enemyHUDController;
-    [SerializeField] private bool canPatrol;
-    [SerializeField] private List<PatrolMovement> patrolPositions;
+    [SerializeField] private Transform patrolTransform;
     [SerializeField] private LayerMask characterLayer;
     [SerializeField] private float characterDetectionRange;
     [SerializeField] private int damage;
+    [SerializeField] private float patrolTime = 2f;
 
-    private List<Vector3> patrolPositionCopy;
-    private int patrolPosIndex;
-
-    private float time;
 
     private void Start()
     {
+        transform.DOMove(patrolTransform.position, patrolTime).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
         MaxHeath = Health;
         _enemyHUDController.Setup(this);
-        patrolPositionCopy = new List<Vector3>();
-        foreach (var t in patrolPositions)
-        {
-            patrolPositionCopy.Add(new Vector3(t.patrolPosition.position.x, t.patrolPosition.position.y,
-                t.patrolPosition.position.z));
-        }
     }
 
     public void GetHit(int damage)
@@ -38,7 +32,7 @@ public class Enemy : MonoBehaviour
             return;
 
         Health -= damage;
-        _enemyHUDController.Repaint(this);
+        Repaint();
 
         if (Health <= 0)
             Die();
@@ -46,16 +40,12 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        time += Time.deltaTime;
-        if (canPatrol)
-        {
-            MoveToPosition(patrolPositionCopy[patrolPosIndex], patrolPositions[patrolPosIndex].duration);
-        }
+
         var hit = Physics2D.OverlapCircle(transform.position, characterDetectionRange, characterLayer);
         if (hit)
         {
@@ -69,39 +59,11 @@ public class Enemy : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, characterDetectionRange);
     }
 
-    private void MoveToPosition(Vector3 pos, float duration)
+    public void Repaint()
     {
-        var t = duration;
-        var prevIndex = patrolPosIndex - 1;
-        if (patrolPosIndex < 1)
-        {
-            prevIndex = patrolPositionCopy.Count - 1;
-        }
-
-        var newPos = Vector3.Lerp(patrolPositionCopy[prevIndex], pos, time / t);
-        transform.position = newPos;
-        CheckPatrolPositionReached();
+        _enemyHUDController.Repaint(this);
     }
 
-    private void CheckPatrolPositionReached()
-    {
-        if (Vector3.Distance(patrolPositionCopy[patrolPosIndex], transform.position) <= 0.1f)
-        {
-            patrolPosIndex++;
-            if (patrolPosIndex >= patrolPositionCopy.Count)
-            {
-                patrolPosIndex = 0;
-            }
-
-            time = 0;
-        }
-    }
-}
-[System.Serializable]
-class PatrolMovement
-{
-    public Transform patrolPosition;
-    public float duration;
 }
 
 

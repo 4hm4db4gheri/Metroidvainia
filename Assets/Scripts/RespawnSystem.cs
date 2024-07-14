@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RespawnSystem : MonoBehaviour
 {
@@ -45,6 +46,7 @@ public class RespawnSystem : MonoBehaviour
 
     public void Respawn(Character player)
     {
+
         Vector2 respawnPosition = checkPointsPositions[currentCheckPointIndex].position;
         respawnPosition.y += fallingRespawnPointRange;
         player.transform.position = respawnPosition;
