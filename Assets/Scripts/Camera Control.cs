@@ -9,14 +9,6 @@ public class CameraControl : MonoBehaviour
    [SerializeField] float cameraXBehindGrid;
    [SerializeField] float cameraYGrid;
 
-   // private void Awake()
-   // {
-   //    Vector3 pos = target.position;
-   //    pos.x += offset.x;
-   //    pos.y = offset.y;
-   //    pos.z = -10;
-   //    transform.position = pos;
-   // }
 
    private void Update()
    {

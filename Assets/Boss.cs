@@ -8,14 +8,14 @@ public class Boss : MonoBehaviour
     [SerializeField] private float length, width;
     [SerializeField] LayerMask characterLayer;
     [SerializeField] int damage;
-    [SerializeField] int maxHealth;
+    [SerializeField] public int maxHealth;
 
     bool isLeft;
     Vector2 top_right_boss;
     Vector2 top_left_boss;
     Vector2 bottom_right_boss;
     Vector2 bottom_left_boss;
-    int Health;
+    public int Health;
 
     private void Start()
     {

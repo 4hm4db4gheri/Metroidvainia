@@ -51,6 +51,7 @@ public class Character : MonoBehaviour
 
     [Header("Respawn")]
     [SerializeField] Enemy[] enemies;
+    [SerializeField] Boss boss;
 
 
 
@@ -139,8 +140,17 @@ public class Character : MonoBehaviour
         var hit = Physics2D.OverlapCircle(swordAnimator.transform.position, attackDetectionRange, enemyMask);
         if (hit)
         {
-            hit.gameObject.TryGetComponent<Enemy>(out var enemy);
-            enemy.GetHit(damage);
+            Debug.Log("attack");
+            if (hit.gameObject.TryGetComponent<Enemy>(out var enemy))
+            {
+                Debug.Log("attack_enemy");
+                enemy.GetHit(damage);
+            }
+            if (hit.gameObject.TryGetComponent<Boss>(out var boss))
+            {
+                Debug.Log("Attack_boss");
+                boss.GetHit(damage);
+            }
         }
     }
 
@@ -201,6 +211,7 @@ public class Character : MonoBehaviour
             enemy.Health = enemy.MaxHeath;
             enemy.Repaint();
         }
+        boss.Health = boss.maxHealth;
     }
 
     private void FlipCheck(float input)
